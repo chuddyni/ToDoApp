@@ -53,6 +53,7 @@ def zadania():
     zadania = kursor.fetchall()
     return render_template('zadania_lista.html', zadania=zadania, error=error)
 
+
 @app.route("/zrobione", methods=["POST"])
 def zrobione():
     zadanie_id = request.form["id"]
@@ -61,6 +62,16 @@ def zrobione():
                , [zadanie_id])
     db.commit()
     flash("Zmieniono status zadania")
+    return redirect(url_for("zadania"))
+
+@app.route("/usun", methods=["POST"])
+def usun():
+    zadanie_id = request.form["id"]
+    db = get_db()
+    db.execute("delete from zadania where id=?"
+               , [zadanie_id])
+    db.commit()
+    flash("Usunieto zadanie")
     return redirect(url_for("zadania"))
 
 if __name__ == '__main__':
